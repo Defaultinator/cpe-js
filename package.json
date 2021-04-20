@@ -1,0 +1,24 @@
+{
+  "name": "cpe",
+  "version": "0.0.1",
+  "description": "A package for working with CPEs for software inventory..",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cbarnard-r7/cpe-js.git"
+  },
+  "author": "<Curt Barnard> cbarnard@rapid7.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cbarnard-r7/cpe-js/issues"
+  },
+  "homepage": "https://github.com/cbarnard-r7/cpe-js#readme",
+  "dependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^8.2.1",
+    "ohm-js": "^15.4.1"
+  }
+}
