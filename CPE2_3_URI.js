@@ -118,7 +118,7 @@ let CPE2_3_URI = class {
     let cpeString = "cpe:/";
     let stringBuilder = "";
 
-    const {
+    let {
       part,
       vendor   = '*',
       product  = '*',
@@ -127,6 +127,14 @@ let CPE2_3_URI = class {
       edition  = '*',
       language = '*',
     } = attrs;
+
+    // Convert ANY keyword to asterisk
+    if (vendor === 'ANY') vendor = '*';
+    if (product === 'ANY') product = '*';
+    if (version === 'ANY') version = '*';
+    if (update === 'ANY') update = '*';
+    if (edition === 'ANY') edition = '*';
+    if (language === 'ANY') language = '*';
 
     cpeString = `${cpeString}${part}`;
 
