@@ -29,7 +29,7 @@ let CPE2_3_URI = class {
   };
 
   static parseCpeString(cpeString) {
-    const grammarSpecification = fs.readFileSync(__dirname + '/grammars/cpe2_3uri.ohm');
+    const grammarSpecification = fs.readFileSync(__dirname + '../grammars/cpe2_3uri.ohm');
     const grammar = ohm.grammar(grammarSpecification.toString());
     const matcher = grammar.matcher();
 
