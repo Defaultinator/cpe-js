@@ -1,7 +1,7 @@
 const chai = require('chai');
 
-const CPE2_3_URI = require('../CPE2_3_URI');
-const { AttributeError, GrammarError } = require('../Errors');
+const CPE2_3_URI = require('../src/CPE2_3_URI');
+const { AttributeError, GrammarError } = require('../src/Errors');
 
 describe('CPE2_3_URI.js', () => {
 
