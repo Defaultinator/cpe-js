@@ -18,9 +18,11 @@
   },
   "homepage": "https://github.com/cbarnard-r7/cpe-js#readme",
   "dependencies": {
+    "ohm-js": "^15.4.1"
+  },
+  "devDependencies": {
     "chai": "^4.2.0",
     "mocha": "^8.2.1",
-    "nyc": "^15.1.0",
-    "ohm-js": "^15.4.1"
+    "nyc": "^15.1.0"
   }
 }
