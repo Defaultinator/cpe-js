@@ -1,5 +1,12 @@
 # cpe-js
 
+This project provides a library for working with CPE strings in JavaScript. Currently, it supports 
+interpreting CPE 2.3 URI formatted CPE strings, but the grammar for WFN is already implemented.
+
+The primary functions are creating a CPE object by CPE string, and returning the various component parts.
+
+It also supports providing a dictionary of supported values and returning a valid CPE URI string.
+
 ## Getting started
 
 ### Development
