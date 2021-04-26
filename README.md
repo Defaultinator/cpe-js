@@ -9,6 +9,14 @@ It also supports providing a dictionary of supported values and returning a vali
 
 ## Getting started
 
+### Install
+
+To install this library into your project, you'll need to manually reference the github repository.
+
+```
+npm install https://github.com/cbarnard-r7/cpe-js
+```
+
 ### Development
 
 ```
