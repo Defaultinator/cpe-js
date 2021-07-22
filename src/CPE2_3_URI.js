@@ -45,60 +45,15 @@ class CPE2_3_URI {
 
     semantics.addAttribute('attributes', {
       cpe_name(prefix, component_list) { return {prefix: prefix.attributes, ...component_list.attributes } },
-      component_list(part) {
+      component_list(part, _1, vendor, _2, product, _3, version, _4, update, _5, edition, _6, language) {
         return {
           ...part.attributes,
-        }
-      },
-      component_list_two_parts(part, _, vendor) {
-        return {
-          ...part.attributes,
-          ...vendor.attributes,
-        }
-      },
-      component_list_three_parts(part, _1, vendor, _2, product) {
-        return {
-          ...part.attributes,
-          ...vendor.attributes,
-          ...product.attributes,
-        }
-      },
-      component_list_four_parts(part, _1, vendor, _2, product, _3, version) {
-        return {
-          ...part.attributes,
-          ...vendor.attributes,
-          ...product.attributes,
-          ...version.attributes,
-        }
-      },
-      component_list_five_parts(part, _1, vendor, _2, product, _3, version, _4, update) {
-        return {
-          ...part.attributes,
-          ...vendor.attributes,
-          ...product.attributes,
-          ...version.attributes,
-          ...update.attributes,
-        }
-      },
-      component_list_six_parts(part, _1, vendor, _2, product, _3, version, _4, update, _5, edition) {
-        return {
-          ...part.attributes,
-          ...vendor.attributes,
-          ...product.attributes,
-          ...version.attributes,
-          ...update.attributes,
-          ...edition.attributes,
-        }
-      },
-      component_list_seven_parts(part, _1, vendor, _2, product, _3, version, _4, update, _5, edition, _6, language) {
-        return {
-          ...part.attributes,
-          ...vendor.attributes,
-          ...product.attributes,
-          ...version.attributes,
-          ...update.attributes,
-          ...edition.attributes,
-          ...language.attributes,
+          ...vendor.attributes[0],
+          ...product.attributes[0],
+          ...version.attributes[0],
+          ...update.attributes[0],
+          ...edition.attributes[0],
+          ...language.attributes[0],
         }
       },
       part(_) { return {part: this.sourceString} },
