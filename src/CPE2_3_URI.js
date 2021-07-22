@@ -3,23 +3,25 @@ const ohm = require('ohm-js');
 
 const { AttributeError, GrammarError } = require('./Errors');
 
-let CPE2_3_URI = class {
-  static VALID_ATTRS = [
-    'prefix',
-    'part',
-    'vendor',
-    'product',
-    'version',
-    'update',
-    'edition',
-    'language',
-  ];
+const VALID_ATTRS = [
+  'prefix',
+  'part',
+  'vendor',
+  'product',
+  'version',
+  'update',
+  'edition',
+  'language',
+];
 
+class CPE2_3_URI {
   constructor(cpeString) {
+    this.VALID_ATTRS = VALID_ATTRS;
+
     let attrs = CPE2_3_URI.parseCpeString(cpeString);
 
     // Ensure every attribute is valid for WFN
-    if(!Object.getOwnPropertyNames(attrs).every((attrName) => CPE2_3_URI.VALID_ATTRS.includes(attrName))) {
+    if(!Object.getOwnPropertyNames(attrs).every((attrName) => this.VALID_ATTRS.includes(attrName))) {
       throw new AttributeError('Invalid attribute name provided to constructor.');
     }
 
@@ -185,14 +187,14 @@ let CPE2_3_URI = class {
 
   getAttributeValues(attributeName) {
     // Ensure the provided attribute is valid.
-    if(!CPE2_3_URI.VALID_ATTRS.includes(attributeName)) throw new AttributeError('Invalid attribute.')
+    if(!this.VALID_ATTRS.includes(attributeName)) throw new AttributeError('Invalid attribute.');
 
     return this.attrs[attributeName] || 'ANY';
   };
 
   toString() {
     let out = "";
-    CPE2_3_URI.VALID_ATTRS.forEach((attrName) => {
+    this.VALID_ATTRS.forEach((attrName) => {
       if(attrName in this.attrs) {
         if(attrName === 'prefix') {
           out += `${this.attrs[attrName]}`;
@@ -209,5 +211,7 @@ let CPE2_3_URI = class {
   }
 
 };
+
+CPE2_3_URI.VALID_ATTRS = VALID_ATTRS;
 
 module.exports = CPE2_3_URI;
