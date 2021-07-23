@@ -1,0 +1,32 @@
+CPE2_3FS {
+    cpe_name = prefix component_list
+    prefix = "cpe:2.3:"
+    component_list = part ":" vendor ":" product ":" version ":" update ":" edition ":" lang ":" sw_edition ":" target_sw ":" target_hw ":" other
+    part = "h" | "o" | "a" | logical
+    vendor = avstring
+    product = avstring
+    version = avstring
+    update = avstring
+    edition = avstring
+    lang = langtag | logical
+    sw_edition = avstring
+	target_sw = avstring
+    target_hw = avstring
+    other = avstring
+    avstring = logical | avstring_value
+    avstring_value = spec_chrs? (unreserved | quoted)+ spec_chrs?
+    spec_chrs = spec1+ | spec2
+    logical = "*" | "-"
+    special = spec1 | spec2
+    spec1 = "?"
+    spec2 = "*"
+    unreserved = letter | digit | "-" | "." | "_"
+    quoted = escape escape | escape special | escape punc
+    escape = "\\"
+    punc = "!" | "\"" | "#" | "$" | "%" | "&" | "\'" | "(" | ")" | "+" | "," | "/" | ":" | ";" | "<" | "=" | ">" | "@" | "[" | "]" | "^" | "`" | "{" | "|" | "}" | "~"
+    langtag = language ("-" region)?
+    language = letter letter letter?
+    region = region_alpha | region_digit
+    region_alpha = letter letter
+    region_digit = digit digit digit
+}
