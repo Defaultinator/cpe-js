@@ -85,8 +85,11 @@ describe('CPE2_3_URI.js', () => {
 
     });
 
-    it.skip('should return an error if the attribute name is invalid', () => {
+    it('should return an error if the attribute name is invalid', () => {
+      let expr = 'cpe:/a:b:c:d';
+      let cpe = new CPE2_3_URI(expr);
 
+      chai.expect(() => cpe.getAttributeValues('foo').to.throw(AttributeError));
     });
 
   });
@@ -148,7 +151,14 @@ describe('CPE2_3_URI.js', () => {
 
     });
 
-    it.skip('should replace ANY keyword with an asterisk', () => {
+    it('should replace ANY keyword with an asterisk', () => {
+      let testAttrs = {
+        part: 'a',
+        update: 'ANY',
+        edition: 'f',
+      };
+
+      chai.expect(CPE2_3_URI.generateCpeStringFromAttributes(testAttrs)).to.equal('cpe:/a:*:*:*:*:f');
 
     });
 
