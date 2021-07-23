@@ -33,7 +33,8 @@ describe('CPE2_3_URI.js', () => {
         'cpe:/a:microsoft:internet_explorer',
         'cpe:/a:microsoft:internet_explorer:8.%02',
         'cpe:/a:microsoft:internet_explorer:8.%02:sp%01',
-        'cpe:/a:microsoft:internet_explorer:8.%02:sp%01:something'
+        'cpe:/a:microsoft:internet_explorer:8.%02:sp%01:something',
+        'cpe:/a:%240.99_kindle_books_project:%240.99_kindle_books:6::~~~android~~'
       ];
 
       try {

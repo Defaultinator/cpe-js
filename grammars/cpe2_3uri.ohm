@@ -9,7 +9,7 @@ CPE2_3URI {
     update = string
     edition = string
     language = langtag
-    string = stringchars +
+    string = stringchars *
     stringchars = unreserved | pct_encoded
     unreserved = letter | digit | "-" | "." | "_" | "~"
     pct_encoded = "%" hexdig hexdig
