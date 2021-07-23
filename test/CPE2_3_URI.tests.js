@@ -34,12 +34,14 @@ describe('CPE2_3_URI.js', () => {
         'cpe:/a:microsoft:internet_explorer:8.%02',
         'cpe:/a:microsoft:internet_explorer:8.%02:sp%01',
         'cpe:/a:microsoft:internet_explorer:8.%02:sp%01:something',
-        'cpe:/a:%240.99_kindle_books_project:%240.99_kindle_books:6::~~~android~~'
+        'cpe:/a:%240.99_kindle_books_project:%240.99_kindle_books:6::~~~android~~',
+        'cpe:/a:adbnewssender_project:adbnewssender:1.0.0:::de',
       ];
 
       try {
         exprs.forEach((expr) => chai.expect(new CPE2_3_URI(expr), `${expr} failed to parse`).to.be.an.instanceof(CPE2_3_URI));
       } catch (e) {
+        console.log(e);
         chai.assert.fail('Expression threw an Error');
       }
 
@@ -59,7 +61,7 @@ describe('CPE2_3_URI.js', () => {
       chai.expect(cpe.getAttributeValues('version')).to.equal('8.%02');
       chai.expect(cpe.getAttributeValues('update')).to.equal('sp%01');
       chai.expect(cpe.getAttributeValues('edition')).to.equal('ANY');
-      chai.expect(cpe.getAttributeValues('language')).to.equal('ANY');
+      chai.expect(cpe.getAttributeValues('lang')).to.equal('ANY');
 
       expr = 'cpe:/';
 
@@ -70,9 +72,9 @@ describe('CPE2_3_URI.js', () => {
       chai.expect(cpe.getAttributeValues('version')).to.equal('ANY');
       chai.expect(cpe.getAttributeValues('update')).to.equal('ANY');
       chai.expect(cpe.getAttributeValues('edition')).to.equal('ANY');
-      chai.expect(cpe.getAttributeValues('language')).to.equal('ANY');
+      chai.expect(cpe.getAttributeValues('lang')).to.equal('ANY');
 
-      expr = 'cpe:/a:b:c:d:e:f:g';
+      expr = 'cpe:/a:b:c:d:e:f:gh';
 
       cpe = new CPE2_3_URI(expr);
       chai.expect(cpe.getAttributeValues('part')).to.equal('a');
@@ -81,7 +83,7 @@ describe('CPE2_3_URI.js', () => {
       chai.expect(cpe.getAttributeValues('version')).to.equal('d');
       chai.expect(cpe.getAttributeValues('update')).to.equal('e');
       chai.expect(cpe.getAttributeValues('edition')).to.equal('f');
-      chai.expect(cpe.getAttributeValues('language')).to.equal('g');
+      chai.expect(cpe.getAttributeValues('lang')).to.equal('gh');
 
 
     });
@@ -105,7 +107,7 @@ describe('CPE2_3_URI.js', () => {
         version: 'd',
         update: 'e',
         edition: 'f',
-        language: 'g'
+        lang: 'g'
       };
 
       chai.expect(CPE2_3_URI.generateCpeStringFromAttributes(testAttrs)).to.equal('cpe:/a:b:c:d:e:f:g');

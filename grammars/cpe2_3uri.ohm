@@ -1,6 +1,6 @@
 CPE2_3URI {
     cpe_name = "cpe:/" component_list
-    component_list = part (#separator vendor)? (#separator product)? (#separator version)? (#separator update)? (#separator edition)? (#separator language)?
+    component_list = part (#separator vendor)? (#separator product)? (#separator version)? (#separator update)? (#separator edition)? (#separator lang)?
     separator = ":"
     part = "h" | "o" | "a" | empty
     vendor = string
@@ -8,13 +8,16 @@ CPE2_3URI {
     version = string
     update = string
     edition = string
-    language = langtag
-    string = stringchars *
+    lang = langtag
+    string = stringchars*
     stringchars = unreserved | pct_encoded
     unreserved = letter | digit | "-" | "." | "_" | "~"
     pct_encoded = "%" hexdig hexdig
     hexdig = digit | "a" | "b" | "c" | "d" | "e" | "f"
     empty = ""
-    langchars = letter | digit
-    langtag = nonemptyListOf<langchars, "-">
+    langtag = language ("-" region)?
+    language = letter letter letter?
+    region = region_alpha | region_digit
+    region_alpha = letter letter
+    region_digit = digit digit digit
 }

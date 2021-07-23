@@ -11,7 +11,7 @@ const VALID_ATTRS = [
   'version',
   'update',
   'edition',
-  'language',
+  'lang',
 ];
 
 class CPE2_3_URI {
@@ -45,7 +45,7 @@ class CPE2_3_URI {
 
     semantics.addAttribute('attributes', {
       cpe_name(prefix, component_list) { return {prefix: prefix.attributes, ...component_list.attributes } },
-      component_list(part, _1, vendor, _2, product, _3, version, _4, update, _5, edition, _6, language) {
+      component_list(part, _1, vendor, _2, product, _3, version, _4, update, _5, edition, _6, lang) {
         return {
           ...part.attributes,
           ...vendor.attributes[0],
@@ -53,7 +53,7 @@ class CPE2_3_URI {
           ...version.attributes[0],
           ...update.attributes[0],
           ...edition.attributes[0],
-          ...language.attributes[0],
+          ...lang.attributes[0],
         }
       },
       part(_) { return {part: this.sourceString} },
@@ -62,7 +62,7 @@ class CPE2_3_URI {
       version(_) { return {version: this.sourceString} },
       update(_) { return {update: this.sourceString} },
       edition(_) { return {edition: this.sourceString} },
-      language(_) { return {language: this.sourceString} },
+      lang(_) { return {lang: this.sourceString} },
       _terminal() {
         return this.sourceString ;
       }
@@ -82,7 +82,7 @@ class CPE2_3_URI {
       version  = '*',
       update   = '*',
       edition  = '*',
-      language = '*',
+      lang = '*',
     } = attrs;
 
     // Convert ANY keyword to asterisk
@@ -91,7 +91,7 @@ class CPE2_3_URI {
     if (version === 'ANY') version = '*';
     if (update === 'ANY') update = '*';
     if (edition === 'ANY') edition = '*';
-    if (language === 'ANY') language = '*';
+    if (lang === 'ANY') lang = '*';
 
     cpeString = `${cpeString}${part}`;
 
@@ -130,9 +130,9 @@ class CPE2_3_URI {
       stringBuilder = '';
     }
 
-    // Check value of language, append to the end if it isn't the final value and a wildcard
-    stringBuilder = `${stringBuilder}:${language}`;
-    if (language !== '*') {
+    // Check value of lang, append to the end if it isn't the final value and a wildcard
+    stringBuilder = `${stringBuilder}:${lang}`;
+    if (lang !== '*') {
       cpeString = `${cpeString}${stringBuilder}`;
     }
 
