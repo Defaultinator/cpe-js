@@ -1,33 +1,28 @@
 const chai = require('chai');
 
 const CPE2_3_URI = require('../src/CPE2_3_URI');
-const { AttributeError, GrammarError } = require('../src/Errors');
+const { AttributeError, GrammarError } = require('../src/Errors/index');
 
-describe('CPE2_3_URI.js', () => {
-
-  describe('Grammar', () => {
-
-    it('should throw a grammar error if the CPE string is invalid', () => {
-      let exprs = [
+describe('CPE2_3_URI.js', function () {
+  describe('Grammar', function () {
+    it('should throw a grammar error if the CPE string is invalid', function () {
+      const exprs = [
         'foo',
         'bar',
         '',
         'shtjryk75i6u4q5yehrtangmshtu,el687ke5wjyrsmhfdg,ukyjrsthsryj',
         '0',
         'true',
-        'a:microsoft:internet_explorer:8.%02:sp%01'
+        'a:microsoft:internet_explorer:8.%02:sp%01',
       ];
 
       exprs.forEach((expr) => chai.expect(() => new CPE2_3_URI(exprs[0])).to.throw(GrammarError));
-
     });
-
   });
 
-  describe('#constructor()', () => {
-
-    it('should create a CPE2_3URI object with a valid string expression', () => {
-      let exprs = [
+  describe('#constructor()', function () {
+    it('should create a CPE2_3URI object with a valid string expression', function () {
+      const exprs = [
         'cpe:/a',
         'cpe:/a:microsoft',
         'cpe:/a:microsoft:internet_explorer',
@@ -41,17 +36,13 @@ describe('CPE2_3_URI.js', () => {
       try {
         exprs.forEach((expr) => chai.expect(new CPE2_3_URI(expr), `${expr} failed to parse`).to.be.an.instanceof(CPE2_3_URI));
       } catch (e) {
-        console.log(e);
-        chai.assert.fail('Expression threw an Error');
+        chai.assert.fail(`Expression threw an Error: ${e}`);
       }
-
     });
-
   });
 
-  describe('#getAttributeValues()', () => {
-
-    it('should properly extract fields from URI expressions', () => {
+  describe('#getAttributeValues()', function () {
+    it('should properly extract fields from URI expressions', function () {
       let expr = 'cpe:/a:microsoft:internet_explorer:8.%02:sp%01';
 
       let cpe = new CPE2_3_URI(expr);
@@ -84,22 +75,18 @@ describe('CPE2_3_URI.js', () => {
       chai.expect(cpe.getAttributeValues('update')).to.equal('e');
       chai.expect(cpe.getAttributeValues('edition')).to.equal('f');
       chai.expect(cpe.getAttributeValues('lang')).to.equal('gh');
-
-
     });
 
-    it('should return an error if the attribute name is invalid', () => {
-      let expr = 'cpe:/a:b:c:d';
-      let cpe = new CPE2_3_URI(expr);
+    it('should return an error if the attribute name is invalid', function () {
+      const expr = 'cpe:/a:b:c:d';
+      const cpe = new CPE2_3_URI(expr);
 
       chai.expect(() => cpe.getAttributeValues('foo').to.throw(AttributeError));
     });
-
   });
 
-  describe('#generateCpeStringFromAttributes()', () => {
-
-    it('should create a valid CPE string from an attribute dictionary', () => {
+  describe('#generateCpeStringFromAttributes()', function () {
+    it('should create a valid CPE string from an attribute dictionary', function () {
       const testAttrs = {
         part: 'a',
         vendor: 'b',
@@ -107,14 +94,13 @@ describe('CPE2_3_URI.js', () => {
         version: 'd',
         update: 'e',
         edition: 'f',
-        lang: 'g'
+        lang: 'g',
       };
 
       chai.expect(CPE2_3_URI.generateCpeStringFromAttributes(testAttrs)).to.equal('cpe:/a:b:c:d:e:f:g');
-
     });
 
-    it('should trim missing trailing values', () => {
+    it('should trim missing trailing values', function () {
       let testAttrs = {
         part: 'a',
         vendor: 'b',
@@ -132,10 +118,9 @@ describe('CPE2_3_URI.js', () => {
       };
 
       chai.expect(CPE2_3_URI.generateCpeStringFromAttributes(testAttrs)).to.equal('cpe:/a:b');
-
     });
 
-    it('should fill in missing values with asterisks', () => {
+    it('should fill in missing values with asterisks', function () {
       let testAttrs = {
         part: 'a',
         update: 'e',
@@ -151,38 +136,31 @@ describe('CPE2_3_URI.js', () => {
       };
 
       chai.expect(CPE2_3_URI.generateCpeStringFromAttributes(testAttrs)).to.equal('cpe:/a:*:c:*:e');
-
     });
 
-    it('should replace ANY keyword with an asterisk', () => {
-      let testAttrs = {
+    it('should replace ANY keyword with an asterisk', function () {
+      const testAttrs = {
         part: 'a',
         update: 'ANY',
         edition: 'f',
       };
 
       chai.expect(CPE2_3_URI.generateCpeStringFromAttributes(testAttrs)).to.equal('cpe:/a:*:*:*:*:f');
-
     });
-
   });
 
-  describe('#parseCpeString()', () => {
+  describe('#parseCpeString()', function () {
+    it('should parse a valid CPE string and turn it into attrs', function () {
+      const expr = 'cpe:/a:b:c';
 
-    it('should parse a valid CPE string and turn it into attrs', () => {
-      let expr = 'cpe:/a:b:c';
-
-      let expected = {
+      const expected = {
         prefix: 'cpe:/',
         part: 'a',
         vendor: 'b',
-        product: 'c'
+        product: 'c',
       };
 
       chai.expect(CPE2_3_URI.parseCpeString(expr)).to.deep.equal(expected);
-
     });
-
   });
-
 });

@@ -1,7 +1,7 @@
 const fs = require('fs');
 const ohm = require('ohm-js');
 
-const { AttributeError, GrammarError } = require('./Errors');
+const { AttributeError, GrammarError } = require('./Errors/index');
 
 const VALID_ATTRS = [
   'prefix',

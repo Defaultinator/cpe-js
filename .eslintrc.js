@@ -5,7 +5,10 @@ module.exports = {
         "es6": true,
         "node": true
     },
-    "extends": "airbnb",
+    "extends": ["airbnb", "plugin:mocha/recommended"],
+    "plugins": [
+      "mocha"
+    ],
     "globals": {
         "Atomics": "readonly",
         "SharedArrayBuffer": "readonly"

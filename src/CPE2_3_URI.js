@@ -1,7 +1,7 @@
 const fs = require('fs');
 const ohm = require('ohm-js');
 
-const { AttributeError, GrammarError } = require('./Errors');
+const { AttributeError, GrammarError } = require('./Errors/index');
 
 const VALID_ATTRS = [
   'prefix',
@@ -18,25 +18,26 @@ class CPE2_3_URI {
   constructor(cpeString) {
     this.VALID_ATTRS = VALID_ATTRS;
 
-    let attrs = CPE2_3_URI.parseCpeString(cpeString);
+    const attrs = CPE2_3_URI.parseCpeString(cpeString);
 
     // Ensure every attribute is valid for WFN
-    if(!Object.getOwnPropertyNames(attrs).every((attrName) => this.VALID_ATTRS.includes(attrName))) {
+    if (!Object.getOwnPropertyNames(attrs)
+      .every((attrName) => (this.VALID_ATTRS.includes(attrName)))) {
       throw new AttributeError('Invalid attribute name provided to constructor.');
     }
 
     // TODO: Make sure all attribute values are valid.
 
     this.attrs = attrs;
-  };
+  }
 
   static parseCpeString(cpeString) {
-    const grammarSpecification = fs.readFileSync(__dirname + '/../grammars/cpe2_3uri.ohm');
+    const grammarSpecification = fs.readFileSync(`${__dirname}/../grammars/cpe2_3uri.ohm`);
     const grammar = ohm.grammar(grammarSpecification.toString());
     const matcher = grammar.matcher();
 
-    if(!grammar.match(cpeString).succeeded()) {
-      throw new GrammarError("Failed to parse string as a CPE 2.3 URI");
+    if (!grammar.match(cpeString).succeeded()) {
+      throw new GrammarError('Failed to parse string as a CPE 2.3 URI');
     }
 
     matcher.setInput(cpeString);
@@ -44,8 +45,24 @@ class CPE2_3_URI {
     const semantics = grammar.createSemantics();
 
     semantics.addAttribute('attributes', {
-      cpe_name(prefix, component_list) { return {prefix: prefix.attributes, ...component_list.attributes } },
-      component_list(part, _1, vendor, _2, product, _3, version, _4, update, _5, edition, _6, lang) {
+      cpe_name(prefix, componentList) {
+        return { prefix: prefix.attributes, ...componentList.attributes };
+      },
+      component_list(
+        part,
+        _1,
+        vendor,
+        _2,
+        product,
+        _3,
+        version,
+        _4,
+        update,
+        _5,
+        edition,
+        _6,
+        lang,
+      ) {
         return {
           ...part.attributes,
           ...vendor.attributes[0],
@@ -54,38 +71,53 @@ class CPE2_3_URI {
           ...update.attributes[0],
           ...edition.attributes[0],
           ...lang.attributes[0],
-        }
+        };
       },
-      part(_) { return {part: this.sourceString} },
-      vendor(_) { return {vendor: this.sourceString} },
-      product(_) { return {product: this.sourceString} },
-      version(_) { return {version: this.sourceString} },
-      update(_) { return {update: this.sourceString} },
-      edition(_) { return {edition: this.sourceString} },
-      lang(_) { return {lang: this.sourceString} },
+      part(_) {
+        return { part: this.sourceString };
+      },
+      vendor(_) {
+        return { vendor: this.sourceString };
+      },
+      product(_) {
+        return { product: this.sourceString };
+      },
+      version(_) {
+        return { version: this.sourceString };
+      },
+      update(_) {
+        return { update: this.sourceString };
+      },
+      edition(_) {
+        return { edition: this.sourceString };
+      },
+      lang(_) {
+        return { lang: this.sourceString };
+      },
       _terminal() {
-        return this.sourceString ;
-      }
+        return this.sourceString;
+      },
     });
 
     return semantics(r).attributes;
-  };
+  }
 
   static generateCpeStringFromAttributes(attrs) {
-    let cpeString = "cpe:/";
-    let stringBuilder = "";
+    let cpeString = 'cpe:/';
+    let stringBuilder = '';
 
     let {
       part,
-      vendor   = '*',
-      product  = '*',
-      version  = '*',
-      update   = '*',
-      edition  = '*',
+      vendor = '*',
+      product = '*',
+      version = '*',
+      update = '*',
+      edition = '*',
       lang = '*',
     } = attrs;
 
     // Convert ANY keyword to asterisk
+    if (part === 'ANY') part = '*';
     if (vendor === 'ANY') vendor = '*';
     if (product === 'ANY') product = '*';
     if (version === 'ANY') version = '*';
@@ -137,35 +169,32 @@ class CPE2_3_URI {
     }
 
     return cpeString;
-
-  };
+  }
 
   getAttributeValues(attributeName) {
     // Ensure the provided attribute is valid.
-    if(!this.VALID_ATTRS.includes(attributeName)) throw new AttributeError('Invalid attribute.');
+    if (!this.VALID_ATTRS.includes(attributeName)) throw new AttributeError('Invalid attribute.');
 
     return this.attrs[attributeName] || 'ANY';
-  };
+  }
 
   toString() {
-    let out = "";
+    let out = '';
     this.VALID_ATTRS.forEach((attrName) => {
-      if(attrName in this.attrs) {
-        if(attrName === 'prefix') {
+      if (attrName in this.attrs) {
+        if (attrName === 'prefix') {
           out += `${this.attrs[attrName]}`;
         } else {
           out += `${this.attrs[attrName]}:`;
         }
-
       }
     });
 
-    if(out.length > 5) return out.slice(0, -1);
+    if (out.length > 5) return out.slice(0, -1);
 
     return out;
   }
-
-};
+}
 
 CPE2_3_URI.VALID_ATTRS = VALID_ATTRS;
 
