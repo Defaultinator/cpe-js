@@ -1,3 +1,25 @@
-MyGrammar {
-    greeting = "Hello" | "Hola"
+CPE2_3WFN {
+    cpe_name = prefix "[" listOf<params, ","> "]"
+    prefix = "wfn:"
+    params = (keyword "=" value) | (keyword_part "=" value)
+    keyword = "vendor" | "product" | "version" | "update" | "edition" | "language" | "sw_edition" | "target_hw" | "target_sw" | "other"
+    keyword_part = "part"
+    value = quoted_avstring | special_values
+    quoted_avstring = "\"" avstring "\""
+    special_values = "NA" | "ANY"
+    avstring = (body | ( spec_chrs | body2* )) spec_chrs?
+    spec_chrs = spec1+ | spec2
+    body = (body1 body2*) | body2 body2*
+    body1 = unreserved | quoted1
+    body2 = unreserved | quoted2
+    unreserved = letter | digit | "_"
+    quoted1 = escape (escape | special | punc_no_dash )
+    quoted2 = escape (escape | special | punc_with_dash )
+    escape = "\\"
+    spec1 = "?"
+    spec2 = "*"
+    special = spec1 | spec2
+    dash = "-"
+    punc_with_dash = punc_no_dash | dash
+    punc_no_dash = "!" | "\"" | "#" | "$" | "%" | "&" | "\'" | "(" | ")" | "+" | "," | "." | "/" | ":" | ";" | "<" | "=" | ">" | "@" | "[" | "]" | "^" | "`" | "{" | "|" | "}" | "~"
 }
