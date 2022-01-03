@@ -1,7 +1,7 @@
 const fs = require('fs');
 const ohm = require('ohm-js');
 
-const {AttributeError, GrammarError} = require('./Errors');
+const { AttributeError, GrammarError } = require('./Errors/index');
 
 const VALID_ATTRS = [
   'prefix',
@@ -22,25 +22,28 @@ class CPE2_3_FS {
   constructor(cpeString) {
     this.VALID_ATTRS = VALID_ATTRS;
 
-    let attrs = CPE2_3_FS.parseCpeString(cpeString);
+    const attrs = CPE2_3_FS.parseCpeString(cpeString);
 
     // Ensure every attribute is valid for WFN
-    if (!Object.getOwnPropertyNames(attrs).every((attrName) => this.VALID_ATTRS.includes(attrName))) {
+    if (!Object.getOwnPropertyNames(attrs)
+      .every((attrName) => (
+        this.VALID_ATTRS.includes(attrName)
+      ))) {
       throw new AttributeError('Invalid attribute name provided to constructor.');
     }
 
     // TODO: Make sure all attribute values are valid.
 
     this.attrs = attrs;
-  };
+  }
 
   static parseCpeString(cpeString) {
-    const grammarSpecification = fs.readFileSync(__dirname + '/../grammars/cpe2_3fs.ohm');
+    const grammarSpecification = fs.readFileSync(`${__dirname}/../grammars/cpe2_3fs.ohm`);
     const grammar = ohm.grammar(grammarSpecification.toString());
     const matcher = grammar.matcher();
 
     if (!grammar.match(cpeString).succeeded()) {
-      throw new GrammarError("Failed to parse string as a CPE 2.3 FS");
+      throw new GrammarError('Failed to parse string as a CPE 2.3 FS');
     }
 
     matcher.setInput(cpeString);
@@ -48,10 +51,32 @@ class CPE2_3_FS {
     const semantics = grammar.createSemantics();
 
     semantics.addAttribute('attributes', {
-      cpe_name(prefix, component_list) {
-        return {prefix: prefix.attributes, ...component_list.attributes}
+      cpe_name(prefix, componentList) {
+        return { prefix: prefix.attributes, ...componentList.attributes };
       },
-      component_list(part, _1, vendor, _2, product, _3, version, _4, update, _5, edition, _6, lang, _7, sw_edition, _8, target_sw, _9, target_hw, _10, other) {
+      component_list(
+        part,
+        _1,
+        vendor,
+        _2,
+        product,
+        _3,
+        version,
+        _4,
+        update,
+        _5,
+        edition,
+        _6,
+        lang,
+        _7,
+        swEdition,
+        _8,
+        targetSw,
+        _9,
+        targetHw,
+        _10,
+        other,
+      ) {
         return {
           ...part.attributes,
           ...vendor.attributes,
@@ -60,69 +85,69 @@ class CPE2_3_FS {
           ...update.attributes,
           ...edition.attributes,
           ...lang.attributes,
-          ...sw_edition.attributes,
-          ...target_sw.attributes,
-          ...target_hw.attributes,
-          ...other.attributes
-        }
+          ...swEdition.attributes,
+          ...targetSw.attributes,
+          ...targetHw.attributes,
+          ...other.attributes,
+        };
       },
       part(_) {
-        return {part: this.sourceString}
+        return { part: this.sourceString };
       },
       vendor(_) {
-        return {vendor: this.sourceString}
+        return { vendor: this.sourceString };
       },
       product(_) {
-        return {product: this.sourceString}
+        return { product: this.sourceString };
       },
       version(_) {
-        return {version: this.sourceString}
+        return { version: this.sourceString };
       },
       update(_) {
-        return {update: this.sourceString}
+        return { update: this.sourceString };
       },
       edition(_) {
-        return {edition: this.sourceString}
+        return { edition: this.sourceString };
       },
       lang(_) {
-        return {lang: this.sourceString}
+        return { lang: this.sourceString };
       },
       sw_edition(_) {
-        return {sw_edition: this.sourceString}
+        return { sw_edition: this.sourceString };
       },
       target_sw(_) {
-        return {target_sw: this.sourceString}
+        return { target_sw: this.sourceString };
       },
       target_hw(_) {
-        return {target_hw: this.sourceString}
+        return { target_hw: this.sourceString };
       },
       other(_) {
-        return {other: this.sourceString}
+        return { other: this.sourceString };
       },
       _terminal() {
         return this.sourceString;
-      }
+      },
     });
 
     return semantics(r).attributes;
-  };
+  }
 
   static generateCpeStringFromAttributes({
-                                           part = '*',
-                                           vendor = '*',
-                                           product = '*',
-                                           version = '*',
-                                           update = '*',
-                                           edition = '*',
-                                           lang = '*',
-                                           sw_edition = '*',
-                                           target_sw = '*',
-                                           target_hw = '*',
-                                           other = '*'
-                                         }) {
-    let prefix = "cpe:2.3:";
-    return `${prefix}${part}:${vendor}:${product}:${version}:${update}:${edition}:${lang}:${sw_edition}:${target_sw}:${target_hw}:${other}`;
-  };
+    part = '*',
+    vendor = '*',
+    product = '*',
+    version = '*',
+    update = '*',
+    edition = '*',
+    lang = '*',
+    sw_edition: swEdition = '*',
+    target_sw: targetSw = '*',
+    target_hw: targetHw = '*',
+    other = '*',
+  }) {
+    const prefix = 'cpe:2.3:';
+    return `${prefix}${part}:${vendor}:${product}:${version}:${update}:${edition}:${lang}:${swEdition}:${targetSw}:${targetHw}:${other}`;
+  }
 
   getAttributeValues(attributeName) {
     // Ensure the provided attribute is valid.
@@ -130,10 +155,10 @@ class CPE2_3_FS {
 
     // TODO: Justify use of logical values vs 'ANY' for cpe versions, specifically WFN
     return this.attrs[attributeName] || 'ANY';
-  };
+  }
 
   toString() {
-    let out = "";
+    let out = '';
     this.VALID_ATTRS.forEach((attrName) => {
       if (attrName in this.attrs) {
         if (attrName === 'prefix') {
@@ -141,7 +166,6 @@ class CPE2_3_FS {
         } else {
           out += `${this.attrs[attrName]}:`;
         }
-
       }
     });
 
@@ -149,8 +173,7 @@ class CPE2_3_FS {
 
     return out;
   }
-
-};
+}
 
 CPE2_3_FS.VALID_ATTRS = VALID_ATTRS;
 
